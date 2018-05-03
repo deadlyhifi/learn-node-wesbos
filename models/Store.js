@@ -17,14 +17,13 @@ const storeSchema = new mongoose.Schema({
 });
 
 storeSchema.pre('save', function(next) {
-    // name not modified, skip generating a new slug
-    if (!this.isModified(this.name)) {
-        return next();
+    if (!this.isModified('name')) {
+      return next(); // skip it
     }
 
     this.slug = slug(this.name);
     next();
-    // todo - make slugs unique
+    // TODO make more resiliant so slugs are unique
 });
 
 module.exports = mongoose.model('Store', storeSchema);

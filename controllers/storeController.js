@@ -37,7 +37,7 @@ exports.resize = async (req, res, next) => {
     req.body.photo = `${uuid.v4()}.${extension}`;
     const photo = await jimp.read(req.file.buffer);
     await photo.resize(800, jimp.AUTO);
-    await photo.write(`./public/uploads/${req.body.photo}`)
+    await photo.write(`./public/uploads/${req.body.photo}`);
 
     next();
 };
@@ -58,7 +58,7 @@ exports.getStores = async (req, res) => {
         'pageStores',
         {
             title: 'Store List',
-            stores
+            stores,
         }
     );
 };
@@ -73,7 +73,7 @@ exports.editStore = async (req, res) => {
         'pageStoreEdit',
         {
             title: `Edit – ${store.name}`,
-            store
+            store,
         }
     );
 };
@@ -95,7 +95,7 @@ exports.updateStore = async (req, res) => {
     ).exec();
 
     req.flash('success', `Succesfully updated <strong>${store.name}</strong>. <a href='/store/${store.slug}'>View Store ►</a>`);
-    res.redirect(`/stores/${store._id}/edit`);
+    res.redirect(`/store/${store._id}/edit`);
 };
 
 exports.getStoreBySlug = async (req, res, next) => {
@@ -104,5 +104,19 @@ exports.getStoreBySlug = async (req, res, next) => {
     if (!store) {
         return next();
     }
-    res.render('pageStore', { store, title: store.name });
+    res.render('pageStore', {
+        title: store.name,
+        store,
+    });
 };
+
+exports.getStoresByTag = async (req, res) => {
+    const tags = await Store.getTagsCount();
+    const tag = req.params.tag || 'Tags';
+
+    res.render('pageTags', {
+        title: tag,
+        tag,
+        tags,
+    });
+}

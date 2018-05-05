@@ -54,6 +54,12 @@ storeSchema.pre('save', async function(next) {
     next();
 });
 
+storeSchema.statics.getStoresCount = function() {
+    return this.aggregate([
+        { $group: { _id: null, count: { $sum: 1 } } }
+    ]);
+};
+
 storeSchema.statics.getTagsCount = function() {
     return this.aggregate([
         { $unwind: '$tags' },

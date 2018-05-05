@@ -1,17 +1,21 @@
 extends layout
 
-include mixins/storeForm
 include mixins/storeCard
 
 block content
     .inner
-        h2 🎸 #{title}
+        h2 🎸 #{tag || 'Tags'}
         ul.tags
             li.tag
                 a.tag__link(href='/tags' class=(currentPath === '/tags' ? 'tag__link--active' : ''))
-                    span.tag__text= 'Tags'
+                    span.tag__text= 'All Stores'
+                    span.tag__count= storesCount
             each t in tags
                 li.tag
                     a.tag__link(href=`/tags/${t._id}` class=(t._id === tag ? 'tag__link--active' : ''))
                        span.tag__text= t._id
                        span.tag__count= t.count
+
+        .stores
+            each store in stores
+                +storeCard(store)

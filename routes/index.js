@@ -11,26 +11,12 @@ router.get('/stores', catchErrors(storeController.getStores));
 router.get('/store/:slug', catchErrors(storeController.getStoreBySlug));
 router.get('/store/:id/edit', catchErrors(storeController.editStore));
 
-router.get('/add', storeController.addStore);
-router.post(
-    '/add',
-    storeController.upload,
-    catchErrors(storeController.resize),
-    catchErrors(storeController.createStore)
-);
-// Edit
-router.post(
-    '/add/:id',
-    storeController.upload,
-    catchErrors(storeController.resize),
-    catchErrors(storeController.updateStore)
-);
-
 router.get('/tags', catchErrors(storeController.getStoresByTag));
 router.get('/tags/:tag', catchErrors(storeController.getStoresByTag));
 
 router.get('/login', userController.loginForm);
-// router.post('/login', userController.loginForm);
+router.post('/login', authController.login);
+router.get('/logout', authController.logout);
 
 router.get('/register', userController.registerForm);
 router.post(
@@ -38,6 +24,28 @@ router.post(
     userController.validateRegister,
     userController.register,
     authController.login
+);
+
+// Auth Routes
+router.get(
+    '/add',
+    authController.isLoggedIn,
+    storeController.addStore
+);
+router.post(
+    '/add',
+    authController.isLoggedIn,
+    storeController.upload,
+    catchErrors(storeController.resize),
+    catchErrors(storeController.createStore)
+);
+// Edit
+router.post(
+    '/add/:id',
+    authController.isLoggedIn,
+    storeController.upload,
+    catchErrors(storeController.resize),
+    catchErrors(storeController.updateStore)
 );
 
 module.exports = router;

@@ -55,4 +55,13 @@ router.post(
     catchErrors(userController.updateAccount)
 );
 
+router.post('/account/forgot', authController.forgotPassword);
+
+router.get('/account/reset/:token', authController.resetPassword);
+router.post(
+    '/account/reset/:token',
+    authController.confirmPasswords,
+    catchErrors(authController.updatePassword)
+);
+
 module.exports = router;

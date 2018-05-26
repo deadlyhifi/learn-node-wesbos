@@ -892,8 +892,7 @@ label {
 
 .single__location {
   margin: 0;
-  margin-top: -3rem;
-  margin-right: -5rem;
+  margin-top: -0.4rem;
   background: #303030;
   color: white;
   display: inline-block;
@@ -903,6 +902,9 @@ label {
   @media all and (max-width: 850px) {
     .single__location {
       margin-right: 0; } }
+
+.single__description {
+  line-height: 1.5em; }
 
 .heart__button {
   background: none;

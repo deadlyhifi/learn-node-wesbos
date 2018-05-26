@@ -44,3 +44,26 @@ exports.register = async (req, res, next) => {
 
     next();
 };
+
+exports.account = (req, res) => {
+    res.render('pageUserAccount', { title: 'Edit Your Account' });
+};
+
+exports.updateAccount = async (req, res) => {
+    console.log('running?');
+    const updates = {
+        name: req.body.name,
+        email: req.body.email,
+    };
+
+    // TODO - compare old with new and warn if no change occured
+
+    const user = await User.findOneAndUpdate(
+        { _id: req.user._id },
+        { $set: updates },
+        { new: true, runValidators: true, context: 'query' }
+    );
+
+    req.flash('success', 'Your profile is updated');
+    res.redirect('back');
+};

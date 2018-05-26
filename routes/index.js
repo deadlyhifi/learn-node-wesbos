@@ -48,4 +48,11 @@ router.post(
     catchErrors(storeController.updateStore)
 );
 
+router.get('/account', authController.isLoggedIn, userController.account);
+router.post(
+    '/account',
+    authController.isLoggedIn,
+    catchErrors(userController.updateAccount)
+);
+
 module.exports = router;

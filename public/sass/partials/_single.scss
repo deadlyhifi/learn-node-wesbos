@@ -49,8 +49,7 @@
   }
   &__location {
     margin: 0;
-    margin-top: -3rem;
-    margin-right: -5rem;
+    margin-top: -0.4rem;
     background: $black;
     color: white;
     display: inline-block;
@@ -60,5 +59,8 @@
     @media all and (max-width: 850px) {
       margin-right: 0;
     }
+  }
+  &__description {
+    line-height: 1.5em;
   }
 }

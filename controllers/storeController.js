@@ -45,6 +45,7 @@ exports.resize = async (req, res, next) => {
 // async - this function will have some await
 // this is wrapped in the router to handle try catch
 exports.createStore = async (req, res) => {
+    req.body.author = req.user._id;
     const store = await (new Store(req.body)).save();
 
     req.flash('success', `Succesfully Created ${store.name}. Care to leave a review?`);
@@ -63,10 +64,18 @@ exports.getStores = async (req, res) => {
     );
 };
 
+const confirmOwner = (store, user) => {
+    if (!store.author.equals(user._id)) {
+        throw Error('You must own the store in order to edit it!');
+    }
+};
+
 exports.editStore = async (req, res) => {
     // find store with id
     const store = await Store.findOne({ _id: req.params.id });
-    // todo - auth
+
+    // auth
+    confirmOwner(store, req.user);
 
     // render edit form
     res.render(
@@ -79,7 +88,9 @@ exports.editStore = async (req, res) => {
 };
 
 exports.updateStore = async (req, res) => {
-    // auth
+    // auth - TODO: can probably use this one to update after auth check
+    const confirmStore = await Store.findOne({ _id: req.params.id });
+    confirmOwner(confirmStore, req.user);
 
     // set the location data to be a point
     req.body.location.type = 'Point';
@@ -99,7 +110,8 @@ exports.updateStore = async (req, res) => {
 };
 
 exports.getStoreBySlug = async (req, res, next) => {
-    const store = await Store.findOne({ slug: req.params.slug });
+    const store = await Store.findOne({ slug: req.params.slug })
+        .populate('author'); // Tell mongo to bring in auth details
 
     if (!store) {
         return next();
